@@ -40,9 +40,11 @@ function redo() {
   }
 }
 
-function replay() {
+function replay(fen_ = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {
   clearLog();
-  updateBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+  fens = []
+  fenIdx = -1;
+  updateBoard(fen_);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -169,8 +171,7 @@ function handleFenSubmit(event) {
   if (!updateBoard(event.target.fen.value)) {
     console.log("Invalid FEN!");
   } else {
-    clearLog();
-    console.log(Module.getGameState(fen));
+    replay(event.target.fen.value);
   }
 }
 
