@@ -1,0 +1,108 @@
+body {
+  overflow: hidden;
+  background-image: radial-gradient(circle at 50% 50%, rgb(255, 255, 255) 25%, rgb(0, 0, 0) 100%);
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+}
+
+#log-area {
+  font-size: 16px;
+  height: 100vh;
+  width: 20em;
+  background-color: transparent;
+  color: white;
+  border: none;
+  resize: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+#chessboard {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 80vh;
+  height: 80vh;
+  background-image: url(./images/chessboard.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  border: 1vh solid;
+  display: grid;
+  grid-template: repeat(8, 1fr) / repeat(8, 1fr);
+  transform: translate(-50%, -50%);
+}
+
+.highlight {
+  background-color: green;
+}
+
+.empty-square {
+  width: 10vh;
+  height: 10vh;
+  user-select: none;
+  content: url("./images/empty-square.png");
+}
+
+.piece {
+  width: 10vh;
+  height: 10vh;
+  cursor: grab;
+  user-select: none;
+}
+
+.white-promotion-menu {
+  content: url("./images/white-promotion-menu.png");
+}
+
+.black-promotion-menu {
+  content: url("./images/black-promotion-menu.png");
+}
+
+.black-pawn {
+  content: url("./images/black-pawn.png");
+}
+
+.black-knight {
+  content: url("./images/black-knight.png");
+}
+
+.black-bishop {
+  content: url("./images/black-bishop.png");
+}
+
+.black-rook {
+  content: url("./images/black-rook.png");
+}
+
+.black-queen {
+  content: url("./images/black-queen.png");
+}
+
+.black-king {
+  content: url("./images/black-king.png");
+}
+
+.white-pawn {
+  content: url("./images/white-pawn.png");
+}
+
+.white-knight {
+  content: url("./images/white-knight.png");
+}
+
+.white-bishop {
+  content: url("./images/white-bishop.png");
+}
+
+.white-rook {
+  content: url("./images/white-rook.png");
+}
+
+.white-queen {
+  content: url("./images/white-queen.png");
+}
+
+.white-king {
+  content: url("./images/white-king.png");
+}
