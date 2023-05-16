@@ -52,6 +52,20 @@ body {
   transform: translateX(-15vh);
 }
 
+.alert {
+  position: fixed;
+  top: 47.5vh;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background-color: white;
+  border: 1px solid grey;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  user-select: none;
+}
+
 .resign-button {
   position: fixed;
   font-size: 5vh;

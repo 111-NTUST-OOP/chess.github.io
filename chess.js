@@ -1,4 +1,4 @@
-const NUM_SONGS = 2;
+const NUM_SONGS = 5;
 var songIdx = 0;
 var currentSong;
 
@@ -6,13 +6,27 @@ function nextSong() {
   if (currentSong) {
     currentSong.pause();
   }
-  if (songIdx = ++songIdx % (NUM_SONGS + 1)) {
+  songIdx = (songIdx + 1) % (NUM_SONGS + 1)
+  if (songIdx) {
     currentSong = new Audio(`./music/${songIdx}.mp3`);
+    currentSong.addEventListener("ended", function() {
+      nextSong();
+    });
     currentSong.play();
   }
 }
 
 
+
+function showAlert(msg) {
+  var alertBox = document.createElement("div");
+  alertBox.className = "alert";
+  alertBox.innerHTML = msg;
+  document.body.appendChild(alertBox);
+  setTimeout(function() {
+    alertBox.remove();
+  }, 3000);
+}
 
 const logToConsole = console.log;
 
@@ -24,12 +38,13 @@ function logToTextArea(msg) {
 };
 
 console.log = function(msg, alertOnSpecialMsg = true) {
-  logToConsole(msg);
-  logToTextArea(msg);
   if (alertOnSpecialMsg && !["White to move", "Black to move", "FEN Copied!", "Invalid FEN!"].includes(msg)) {
-    alert(msg);
+    clearLog();
+    showAlert(msg);
     stopTimer();
   }
+  logToConsole(msg);
+  logToTextArea(msg);
 };
 
 function clearLog() {
@@ -47,6 +62,8 @@ function switchTimer() {
     timer = document.querySelector("#white-timer");
   } else if (gameState === "Black to move") {
     timer = document.querySelector("#black-timer");
+  } else {
+    return;
   }
   
   stopTimer();
