@@ -1,8 +1,18 @@
-var fen;
-var fens = [];
-var fenIdx = -1;
-var promoting = false;
-var promotingSquare = "";
+const NUM_SONGS = 2;
+var songIdx = 0;
+var currentSong;
+
+function nextSong() {
+  if (currentSong) {
+    currentSong.pause();
+  }
+  if (songIdx = ++songIdx % (NUM_SONGS + 1)) {
+    currentSong = new Audio(`./music/${songIdx}.mp3`);
+    currentSong.play();
+  }
+}
+
+
 
 const logToConsole = console.log;
 
@@ -13,39 +23,93 @@ function logToTextArea(msg) {
   logArea.value = last10.join('\n');
 };
 
-console.log = function(msg) {
+console.log = function(msg, alertOnSpecialMsg = true) {
   logToConsole(msg);
   logToTextArea(msg);
+  if (alertOnSpecialMsg && !["White to move", "Black to move", "FEN Copied!", "Invalid FEN!"].includes(msg)) {
+    alert(msg);
+    stopTimer();
+  }
 };
 
 function clearLog() {
   document.getElementById('log-area').value = "";
+  console.clear();
 }
 
-Module['onRuntimeInitialized'] = function() {
-  replay();
-};
 
-function undo() {
-  if (fenIdx > 0) {    
-    clearLog();
-    updateBoard(fens[--fenIdx], save = false);
+
+var activeTimer;
+var timerInterval;
+
+function switchTimer() {
+  if (!activeTimer) {
+    var gameState = Module.getGameState(fen);
+    if (gameState === "White to move") {
+      activeTimer = document.querySelector("#black-timer");
+    } else if (gameState === "Black to move") {
+      activeTimer = document.querySelector("#white-timer");
+    }
+    startTimer();
+  }
+  
+  activeTimer.classList.remove("active");
+  
+  if (activeTimer.id === "black-timer") {
+    activeTimer = document.querySelector("#white-timer");
+  } else {
+    activeTimer = document.querySelector("#black-timer");
+  }
+  
+  activeTimer.classList.add("active");
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    const time = activeTimer.innerHTML.split(':');
+    let minutes = parseInt(time[0]);
+    let seconds = parseInt(time[1]);
+
+    if (seconds === 0) {
+      if (minutes === 0) {
+        clearInterval(timerInterval);
+        let color = activeTimer.id.split('-')[0];
+        let msg = `Timeout: ${color === "white" ? "Black" : "White"} wins`;
+        console.log(msg);
+        return;
+      } else {
+        minutes--;
+        seconds = 59;
+      }
+    } else {
+      seconds--;
+    }
+
+    activeTimer.innerHTML = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }, 1000);
+}
+
+function stopTimer() {
+  if (activeTimer) {
+    clearInterval(timerInterval);
+    activeTimer.classList.remove("active");
   }
 }
 
-function redo() {
-  if (fenIdx < fens.length - 1) {
-    clearLog();
-    updateBoard(fens[++fenIdx], save = false);
-  }
+function resetTimer() {
+  stopTimer();
+  activeTimer = null;
+  document.querySelector("#white-timer").innerHTML = "10:00"
+  document.querySelector("#black-timer").innerHTML = "10:00"
 }
 
-function replay(fen_ = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {
-  clearLog();
-  fens = []
-  fenIdx = -1;
-  updateBoard(fen_);
-}
+
+
+var fen;
+var fens = [];
+var fenIdx = -1;
+var promoting = false;
+var promotingSquare = "";
 
 document.addEventListener('DOMContentLoaded', function() {
   document.querySelector("#chessboard").querySelectorAll('*').forEach(function(square) {
@@ -56,6 +120,34 @@ document.addEventListener('DOMContentLoaded', function() {
     square.addEventListener('drop', drop);
   });
 });
+
+Module['onRuntimeInitialized'] = function() {
+  replay();
+};
+
+function undo() {
+  if (fenIdx > 0) {    
+    clearLog();
+    switchTimer();
+    updateBoard(fens[--fenIdx], save = false);
+  }
+}
+
+function redo() {
+  if (fenIdx < fens.length - 1) {
+    clearLog();
+    switchTimer();
+    updateBoard(fens[++fenIdx], save = false);
+  }
+}
+
+function replay(fen_ = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {
+  clearLog();
+  fens = []
+  fenIdx = -1;
+  updateBoard(fen_);
+  resetTimer();
+}
 
 function removeHighlights() {
   document.querySelector('#chessboard').querySelectorAll('*').forEach(function(square) {
@@ -102,6 +194,7 @@ function drop(event) {
       fen = Module.getNextFEN(fen, move);
       updateBoard(fen);
     }
+    switchTimer();
   }
 }
 

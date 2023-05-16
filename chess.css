@@ -22,8 +22,8 @@ body {
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 80vh;
-  height: 80vh;
+  width: 64vh;
+  height: 64vh;
   background-image: url(./images/chessboard.png);
   background-repeat: no-repeat;
   background-size: 100%;
@@ -33,20 +33,41 @@ body {
   transform: translate(-50%, -50%);
 }
 
+#black-timer {
+  top: 10vh;
+}
+
+#white-timer {
+  bottom: 10vh;
+}
+
+.timer.active {
+  color: red;
+}
+
+.timer {
+  position: fixed;
+  font-family: consolas;
+  font-size: 5vh;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .highlight {
   background-color: green;
 }
 
 .empty-square {
-  width: 10vh;
-  height: 10vh;
+  width: 8vh;
+  height: 8vh;
   user-select: none;
   content: url("./images/empty-square.png");
 }
 
 .piece {
-  width: 10vh;
-  height: 10vh;
+  width: 8vh;
+  height: 8vh;
   cursor: grab;
   user-select: none;
 }
