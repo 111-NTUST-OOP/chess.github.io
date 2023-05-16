@@ -34,7 +34,6 @@ console.log = function(msg, alertOnSpecialMsg = true) {
 
 function clearLog() {
   document.getElementById('log-area').value = "";
-  console.clear();
 }
 
 
@@ -111,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
     square.addEventListener('dragover', dragOver);
     square.addEventListener('drop', drop);
   });
+  nextSong();
 });
 
 Module['onRuntimeInitialized'] = function() {
