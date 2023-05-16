@@ -1,4 +1,4 @@
-const NUM_SONGS = 5;
+const NUM_SONGS = 6;
 var songIdx = 0;
 var currentSong;
 
@@ -154,7 +154,7 @@ function redo() {
 
 function replay(fen_ = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {
   clearLog();
-  fens = []
+  fens = [];
   fenIdx = -1;
   updateBoard(fen_);
   resetTimer();

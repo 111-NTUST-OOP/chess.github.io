@@ -8,43 +8,6 @@
  * Update Date: May 11, 2023
  * Description: Functions and macros used for debugging. (C++20)
 ***************************************************************************/
-// ===== QUICK SUMMARY BY CHATGPT =====
-// This is a C++ code defining several functions and macros that can be used
-// for debugging and printing values of different types.
-
-// The printstruct function is a variadic template that takes a struct-like
-// object and prints its members separated by commas. There are several
-// overloads of this function that differ in the number of members expected.
-// A struct-like object is any object that can be unpacked with structured
-// binding (i.e., an object with named members).
-
-// The write function is also a variadic template that prints its arguments
-// to standard output. If the argument is printable, it is simply printed
-// using std::cout. If the argument is iterable, its contents are printed
-// inside square brackets. If the argument is tuple-like, its contents are
-// printed inside parentheses. If the argument is struct-like, printstruct
-// is called to print its members. If none of these cases apply, the string
-// "<unprintable type: {type}>" is printed.
-
-// The print function takes one or more arguments and calls write on each of
-// them, separated by a space.
-
-// The type function takes an object and returns a string representing its
-// type. It uses compiler-specific features to extract the type name.
-
-// The whatis macro prints the name and value of its argument using type and
-// write.
-
-// The where_ and where macros print the current source file, line number,
-// and function name.
-
-// The writeln macro is equivalent to write but adds a newline character at
-// the end.
-
-// The println macro is equivalent to print but adds a newline character at
-// the end.
-// ===== END OF SUMMARY BY CHATGPT =====
-
 // Include guard
 #pragma once
 

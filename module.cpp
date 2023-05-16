@@ -45,7 +45,7 @@ bool isValidCrd(const std::string &crd) {
 
 // Intent: Convert a coordinate to Pos of x and y used for array indexing, y is inverted
 // Pre: None
-// Post: bool(result) == false if the input is invalid
+// Post: result == Pos{8, 8} if the coordinate is invalid
 Pos crd2pos(const std::string &crd) {
   return isValidCrd(crd) ? Pos{size_t(crd[0] - 'a'), size_t('8' - crd[1])} : Pos{8, 8};
 }
