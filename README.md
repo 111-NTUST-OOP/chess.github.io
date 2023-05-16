@@ -10,7 +10,7 @@ https://111-ntust-oop.github.io/chess.github.io/chess.html
 ### Win / Lose
 | Checkmate | Resignation | Time out |
 |:---------:|:-----------:|:--------:|
-|✓          |             |         |
+|✓          |✓            |✓        |
 
 ### Draw
 | Threefold repetition | 50-move rule | Stalemate | Draw by agreement | Insufficient material |
