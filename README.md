@@ -1,5 +1,7 @@
 # Chess Project
 
+https://111-ntust-oop.github.io/chess.github.io/chess.html
+
 ### Compile
 * em++ -std=c++20 -lembind -o module.js module.cpp
 
