@@ -3,27 +3,31 @@
 ### Compile
 * em++ -std=c++20 -lembind -o module.js module.cpp
 
+### TODO
+#### Filter invalid FENs
+* King in check on the opponent's turn
+
 ## End conditions
 
 ### Win / Lose
 | Checkmate | Resignation | Time out |
 |:---------:|:-----------:|:--------:|
-|           |             |          |
+|✓         |             |         |
 
 ### Draw
 | Threefold repetition | 50-move rule | Stalemate | Draw by agreement | Insufficient material |
 |:--------------------:|:------------:|:---------:|:-----------------:|:---------------------:|
-|                      |              |           |                   |                       |
+|                      |              |✓          |                   |                       |
 
 ## Chess Pieces
 |        | Basic movement | Pin detection | Castling | En passant | Promotion |
 |:------:|:--------------:|:-------------:|:--------:|:----------:|:---------:|
-| King   |                |               |          |            |           |
-| Pawn   |                |               |          |            |           |
-| Knight |                |               |          |            |           |
-| Bishop |                |               |          |            |           |
-| Rook   |                |               |          |            |           |
-| Queen  |                |               |          |            |           |
+| King   |✓               |               |✓         |            |           |
+| Pawn   |✓               |               |          |✓           |✓         |
+| Knight |✓               |               |          |            |           |
+| Bishop |✓               |               |          |            |           |
+| Rook   |✓               |               |          |            |           |
+| Queen  |✓               |               |          |            |           |
 
 ## Coding Style
 

@@ -407,7 +407,7 @@ std::string getValidTargetSquares(const std::string &fen, const std::string &src
       result += xy2crd(tx, ty) + '\0';
     
     // undo the move
-    data[sy][sy] = sp;
+    data[sy][sx] = sp;
     data[ty][tx] = tp;
   }
   
