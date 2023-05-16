@@ -110,7 +110,7 @@ std::vector<std::string> parseFEN(const std::string &fen) {
   if (!std::regex_match(fen, FEN_PATTERN))
     return {};
   
-  std::vector<std::string> result(SIZE); // may actually throw std::bad_alloc but very unlikely
+  std::vector<std::string> result(SIZE);
   auto it = fen.begin();
   
   // parse the data

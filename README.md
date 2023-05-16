@@ -3,17 +3,6 @@
 ### Compile
 * em++ -std=c++20 -lembind -o module.js module.cpp
 
-### TODO
-#### Filter invalid FENs
-* King in check on the opponent's turn
-#### Add 50-move rule
-
-#### Add Threefold repetition
-
-#### Add music
-
-#### 
-
 ## End conditions
 
 ### Win / Lose

@@ -38,42 +38,34 @@ function clearLog() {
 }
 
 
-
-var activeTimer;
 var timerInterval;
 
 function switchTimer() {
-  if (!activeTimer) {
-    var gameState = Module.getGameState(fen);
-    if (gameState === "White to move") {
-      activeTimer = document.querySelector("#black-timer");
-    } else if (gameState === "Black to move") {
-      activeTimer = document.querySelector("#white-timer");
-    }
-    startTimer();
+  const gameState = Module.getGameState(fen);
+  let timer;
+  
+  if (gameState === "White to move") {
+    timer = document.querySelector("#white-timer");
+  } else if (gameState === "Black to move") {
+    timer = document.querySelector("#black-timer");
   }
   
-  activeTimer.classList.remove("active");
+  stopTimer();
+  startTimer(timer);
   
-  if (activeTimer.id === "black-timer") {
-    activeTimer = document.querySelector("#white-timer");
-  } else {
-    activeTimer = document.querySelector("#black-timer");
-  }
-  
-  activeTimer.classList.add("active");
+  timer.classList.add("active");
 }
 
-function startTimer() {
+function startTimer(timer) {
   timerInterval = setInterval(() => {
-    const time = activeTimer.innerHTML.split(':');
+    const time = timer.innerHTML.split(':');
     let minutes = parseInt(time[0]);
     let seconds = parseInt(time[1]);
 
     if (seconds === 0) {
       if (minutes === 0) {
         clearInterval(timerInterval);
-        let color = activeTimer.id.split('-')[0];
+        let color = timer.id.split('-')[0];
         let msg = `Timeout: ${color === "white" ? "Black" : "White"} wins`;
         console.log(msg);
         return;
@@ -85,20 +77,20 @@ function startTimer() {
       seconds--;
     }
 
-    activeTimer.innerHTML = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    timer.innerHTML = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }, 1000);
 }
 
 function stopTimer() {
-  if (activeTimer) {
+  const timer = document.querySelector(".active");
+  if (timer) {
     clearInterval(timerInterval);
-    activeTimer.classList.remove("active");
+    timer.classList.remove("active");
   }
 }
 
 function resetTimer() {
   stopTimer();
-  activeTimer = null;
   document.querySelector("#white-timer").innerHTML = "10:00"
   document.querySelector("#black-timer").innerHTML = "10:00"
 }
@@ -126,18 +118,20 @@ Module['onRuntimeInitialized'] = function() {
 };
 
 function undo() {
-  if (fenIdx > 0) {    
+  cancelPromotion();
+  if (fenIdx > 0) {
     clearLog();
-    switchTimer();
     updateBoard(fens[--fenIdx], save = false);
+    switchTimer();
   }
 }
 
 function redo() {
+  cancelPromotion();
   if (fenIdx < fens.length - 1) {
     clearLog();
-    switchTimer();
     updateBoard(fens[++fenIdx], save = false);
+    switchTimer();
   }
 }
 
@@ -149,21 +143,52 @@ function replay(fen_ = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
   resetTimer();
 }
 
+function addTargetHighlights(fen, sourceSquareId) {
+  const targetSquares = Module.getValidTargetSquares(fen, sourceSquareId).split('\0');
+  if (targetSquares[0].length === 2) {
+    targetSquares.forEach(function(square) {
+      document.getElementById(square).classList.add("highlight");
+    });
+  }
+}
+
 function removeHighlights() {
   document.querySelector('#chessboard').querySelectorAll('*').forEach(function(square) {
     square.classList.remove("highlight");
   });
 }
 
+function movePiece(fen, move) {
+  if (move.length != 4) return false;
+  const source = document.getElementById(move.substr(0, 2));
+  const target = document.getElementById(move.substr(2, 2));
+  
+  if (source.className !== 'empty-square' && Module.isValidMove(fen, move)) {
+    if (source.classList.contains("white-pawn") && target.id[1] === '8') {
+      source.className = "empty-square";
+      promotePiece(target.id, "white", move);
+    } else if (source.classList.contains("black-pawn") && target.id[1] === '1') {
+      source.className = "empty-square";
+      promotePiece(target.id, "black", move);
+    } else {
+      fen = Module.getNextFEN(fen, move);
+      updateBoard(fen);
+    }
+    switchTimer();
+    return true;
+  }
+  return false;
+}
+
+var prevClickedSquareId = "";
+
 function click(event) {
   if (event.target.id !== promotingSquare) {
     cancelPromotion();
-  }
-  const targetSquares = Module.getValidTargetSquares(fen, event.target.id).split('\0');
-  if (targetSquares[0].length === 2) {
-    targetSquares.forEach(function(square) {
-      document.getElementById(square).classList.toggle("highlight");
-    });
+    if (!movePiece(fen, prevClickedSquareId + event.target.id)) {
+      prevClickedSquareId = event.target.id;
+      addTargetHighlights(fen, event.target.id);
+    }
   }
 }
 
@@ -180,22 +205,8 @@ function dragOver(event) {
 
 function drop(event) {
   event.preventDefault();
-  const source = document.getElementById(event.dataTransfer.getData('text/plain'));
-  const move = source.id + event.target.id;
-  
-  if (source.className !== 'empty-square' && Module.isValidMove(fen, move)) {
-    if (source.classList.contains("white-pawn") && event.target.id[1] === '8') {
-      source.className = "empty-square";
-      promotePiece(event.target.id, "white", move);
-    } else if (source.classList.contains("black-pawn") && event.target.id[1] === '1') {
-      source.className = "empty-square";
-      promotePiece(event.target.id, "black", move);
-    } else {
-      fen = Module.getNextFEN(fen, move);
-      updateBoard(fen);
-    }
-    switchTimer();
-  }
+  removeHighlights();
+  movePiece(fen, event.dataTransfer.getData('text/plain') + event.target.id);
 }
 
 function updateBoard(fen_, save = true, logGameState = true) {
@@ -229,39 +240,42 @@ function cancelPromotion() {
 }
 
 function promotePiece(squareId, color, move) {
-  promoting = true;
-  promotingSquare = squareId;
-  document.getElementById(squareId).className = "piece " + color + "-promotion-menu";
-  document.querySelector("#" + squareId).addEventListener('click', function(event) {
-    const x = event.offsetX;
-    const y = event.offsetY;
-    const width = event.target.width;
-    const height = event.target.height;
-    let newPiece = '';
-    if (x < width / 2 && y < height / 2) {
-      newPiece = "knight";
-      move += (color == "white" ? 'N' : 'n');
-    } else if (x >= width / 2 && y < height / 2) {
-      newPiece = "bishop";
-      move += (color == "white" ? 'B' : 'b');
-    } else if (x < width / 2 && y >= height / 2) {
-      newPiece = "rook";
-      move += (color == "white" ? 'R' : 'r');
-    } else {
-      newPiece = "queen";
-      move += (color == "white" ? 'Q' : 'q');
-    }
-    if (promoting) {
-      updateBoard(Module.getNextFEN(fen, move));
-      promoting = false;
-      promotingSquare = "";
-    }
-  }, { once: true });
+  setTimeout(function() {
+    promoting = true;
+    promotingSquare = squareId;
+    document.getElementById(squareId).className = "piece " + color + "-promotion-menu";
+    document.querySelector("#" + squareId).addEventListener('click', function(event) {
+      const x = event.offsetX;
+      const y = event.offsetY;
+      const width = event.target.width;
+      const height = event.target.height;
+      let newPiece = '';
+      if (x < width / 2 && y < height / 2) {
+        newPiece = "knight";
+        move += (color == "white" ? 'N' : 'n');
+      } else if (x >= width / 2 && y < height / 2) {
+        newPiece = "bishop";
+        move += (color == "white" ? 'B' : 'b');
+      } else if (x < width / 2 && y >= height / 2) {
+        newPiece = "rook";
+        move += (color == "white" ? 'R' : 'r');
+      } else {
+        newPiece = "queen";
+        move += (color == "white" ? 'Q' : 'q');
+      }
+      if (promoting) {
+        updateBoard(Module.getNextFEN(fen, move));
+        switchTimer();
+        promoting = false;
+        promotingSquare = "";
+      }
+    }, { once: true });
+  }, 50);
 }
 
 function handleFenSubmit(event) {
   event.preventDefault();
-  if (!updateBoard(event.target.fen.value)) {
+  if (!updateBoard(event.target.fen.value, save = true, logGameState = false)) {
     console.log("Invalid FEN!");
   } else {
     replay(event.target.fen.value);
