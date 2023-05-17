@@ -119,15 +119,20 @@ var fenIdx = -1;
 var promoting = false;
 var promotingSquare = "";
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function() {
   document.querySelector("#chessboard").querySelectorAll('*').forEach(function(square) {
     square.addEventListener("mouseup", removeHighlights);
     square.addEventListener("click", click);
-    square.addEventListener('dragstart', dragStart);
-    square.addEventListener('dragover', dragOver);
-    square.addEventListener('drop', drop);
+    square.addEventListener("dragstart", dragStart);
+    square.addEventListener("dragover", dragOver);
+    square.addEventListener("drop", drop);
   });
   nextSong();
+  document.body.style.opacity = 1;
+  const bg1 = document.getElementById("bg1");
+  bg1.addEventListener("load", function() {
+    bg1.style.opacity = 1;
+  });
 });
 
 Module['onRuntimeInitialized'] = function() {
