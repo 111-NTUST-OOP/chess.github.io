@@ -128,11 +128,6 @@ document.addEventListener("DOMContentLoaded", function() {
     square.addEventListener("drop", drop);
   });
   nextSong();
-  document.body.style.opacity = 1;
-  const bg1 = document.getElementById("bg1");
-  bg1.addEventListener("load", function() {
-    bg1.style.opacity = 1;
-  });
 });
 
 Module['onRuntimeInitialized'] = function() {

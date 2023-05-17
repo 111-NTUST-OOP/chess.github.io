@@ -4,8 +4,6 @@ body {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  opacity: 0;
-  transition: opacity 2s ease-in-out;
 }
 
 #log-area {
@@ -53,14 +51,14 @@ body {
   top: 10vh;
   transform: translateX(-15vh);
 }
-
+/* 
 .background-image {
   position: fixed;
   margin: 0;
   opacity: 0;
   z-index: -1;
   transition: opacity 2s ease-in-out;
-}
+} */
 
 .alert {
   position: fixed;
