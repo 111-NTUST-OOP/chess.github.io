@@ -323,18 +323,22 @@ std::string getValidTargetSquares(const std::string &fen, const std::string &src
   char sp = data[sy][sx];
   char sptype = tolower(sp);
   
+  auto isEmpty = [&](size_t x, size_t y) {
+    return !isBlocked(x, y) && data[y][x] == ' ';
+  };
+  
   if (sptype == 'k') {
     for (auto [x, y] : {Pos{sx + 1, sy}, {sx + 1, sy + 1}, {sx, sy + 1}, {sx - 1, sy + 1}, {sx - 1, sy}, {sx - 1, sy - 1}, {sx, sy - 1}, {sx + 1, sy - 1}})
       if (!isBlocked(x, y))
         addMove(x, y);
     
-    if (data[CASTLING_RIGHTS].find(islower(sp) ? 'k' : 'K') != std::string::npos && !isBlocked(sx + 1, sy) && !isBlocked(sx + 2, sy)
+    if (data[CASTLING_RIGHTS].find(islower(sp) ? 'k' : 'K') != std::string::npos && isEmpty(sx + 1, sy) && isEmpty(sx + 2, sy)
       && !isAttackedByEnemy(sx, sy) && !isAttackedByEnemy(sx + 1, sy) && !isAttackedByEnemy(sx + 2, sy))
     {
       addMove(sx + 2, sy);
     }
     
-    if (data[CASTLING_RIGHTS].find(islower(sp) ? 'q' : 'Q') != std::string::npos && !isBlocked(sx - 1, sy) && !isBlocked(sx - 2, sy) && !isBlocked(sx - 3, sy)
+    if (data[CASTLING_RIGHTS].find(islower(sp) ? 'q' : 'Q') != std::string::npos && isEmpty(sx - 1, sy) && isEmpty(sx - 2, sy) && isEmpty(sx - 3, sy)
       && !isAttackedByEnemy(sx, sy) && !isAttackedByEnemy(sx - 1, sy) && !isAttackedByEnemy(sx - 2, sy))
     {
       addMove(sx - 2, sy);
