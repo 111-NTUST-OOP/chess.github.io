@@ -12,17 +12,16 @@
     <script src="chess.js"></script>
   </head>
   <body>
-    <!-- <img id="bg1" class="background-image" src="./images/background.png"></img> -->
-    
     <form onsubmit="handleFenSubmit(event)">
       <label for="fen" style="color:white;user-select:none;">FEN: </label>
       <input id="fen" type="text" size="75">
       <button type="submit">Load</button>
       <button type="button" onclick="copyFenToClipboard()">Copy</button>
-      <button type="button" onclick="replay()">Replay</button>
       <button type="button" onclick="undo()">Undo</button>
       <button type="button" onclick="redo()">Redo</button>
       <button type="button" onclick="nextSong()">Next song</button>
+      <button type="button" onclick="replay()">Play again (White first)</button>
+      <button type="button" onclick="replay('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1')">Play again (Black first)</button>
     </form>
     
     <div id="black-timer" class="timer">10:00</div>
