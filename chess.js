@@ -128,9 +128,10 @@ document.addEventListener("DOMContentLoaded", function() {
     square.addEventListener("drop", drop);
   });
   nextSong();
-  // preload
-  new Image("./images/white-promotion-menu.png");
-  new Image("./images/black-promotion-menu.png");
+  var preload1 = new Image();
+  var preload2 = new Image();
+  preload1.src = "./images/black-promotion-menu.png";
+  preload2.src = "./images/white-promotion-menu.png";
 });
 
 Module['onRuntimeInitialized'] = function() {
