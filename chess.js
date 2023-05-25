@@ -48,7 +48,10 @@ console.log = function(msg, alertOnSpecialMsg = true) {
 };
 
 function clearLog() {
-  document.getElementById('log-area').value = "";
+  let logArea = document.getElementById('log-area');
+  if (logArea) {
+    logArea.value = "";
+  }
 }
 
 
