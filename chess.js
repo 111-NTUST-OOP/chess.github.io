@@ -107,8 +107,8 @@ function stopTimer() {
 
 function resetTimer() {
   stopTimer();
-  document.querySelector("#white-timer").innerHTML = "10:00"
-  document.querySelector("#black-timer").innerHTML = "10:00"
+  document.querySelector("#white-timer").innerHTML = "03:00"
+  document.querySelector("#black-timer").innerHTML = "03:00"
 }
 
 
